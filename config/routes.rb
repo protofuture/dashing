@@ -1,4 +1,8 @@
 Box::Application.routes.draw do
+  get "home/contact"
+
+  get "home/about"
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
