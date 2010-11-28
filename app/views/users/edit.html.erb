@@ -1,4 +1,4 @@
-<h1>Sign Up</h1>
+<h1>Edit user</h1>
 
 <%= form_for(@user) do |f| %>
   <%= render 'shared/error_messages', :object => f.object %>
@@ -19,6 +19,9 @@
     <%= f.password_field :password_confirmation %>
   </div>
   <div class="actions">
-    <%= f.submit "Sign up" %>
+    <%= f.submit "Update" %>
   </div>
+  <%= link_to "Delete", current_user, :method => :delete,
+                                      :confirm => "This will delete #{current_user.name}. Are you sure?",
+                                      :title => "Delete #{current_user.name}" %>
 <% end %>

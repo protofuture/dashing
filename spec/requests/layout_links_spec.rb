@@ -17,7 +17,7 @@ describe "LayoutLinks" do
     response.should have_selector('title', :content => "About")
   end
 
-  it "should have a Help page at '/help'"
+#  it "should have a Help page at '/help'"
 
   it "should have a signup page at '/signup'" do
     get '/signup'
