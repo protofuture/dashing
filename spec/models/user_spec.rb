@@ -133,4 +133,41 @@ describe User do
       end
     end
   end
+
+  describe "item associations" do
+    before(:each) do
+      @user = User.create(@attr)
+      @i1 = Factory(:item, :user => @user, :created_at => 1.day.ago)
+      @i2 = Factory(:item, :user => @user, :created_at => 1.hour.ago)
+    end
+
+    it "should have an items attribute" do
+      @user.should respond_to(:items)
+    end
+
+#    it "should have the items in the right order"
+
+    it "should destroy associated items" do
+      @user.destroy
+      [@i1, @i2].each do |item|
+        Item.find_by_id(item.id).should be_nil
+      end
+    end
+  end
+
+  describe "share directory" do
+    it "should create the share directory for the user upon creation" do
+      File.directory?(Rails.root.join(@attr[:name])).should be_false
+      @user = User.create(@attr)
+      File.directory?(Rails.root.join(@attr[:name])).should be_true
+      User.destroy(@user)
+    end
+
+    it "should destroy the share directory for the user upon destruction" do
+      @user = User.create(@attr)
+      File.directory?(Rails.root.join(@user[:name])).should be_true
+      User.destroy(@user)
+      File.directory?(Rails.root.join(@user[:name])).should be_false
+    end
+  end
 end

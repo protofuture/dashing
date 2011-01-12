@@ -2,7 +2,8 @@ Box::Application.routes.draw do
   get "sessions/new"
 
   resources :users
-  resources :sessions, :only => [:new, :create, :destroy]
+  resources :sessions,  :only => [:new, :create, :destroy]
+  resources :items,     :only => [:create, :destroy]
 
   match '/signup',  :to => 'users#new'
   match '/signin',  :to => 'sessions#new'

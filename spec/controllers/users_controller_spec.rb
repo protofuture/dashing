@@ -31,6 +31,13 @@ describe UsersController do
 
 #    it "should have a profile image"
 
+    it "should show the user's items" do
+      i1 = Factory(:item, :user => @user)
+      i2 = Factory(:item, :user => @user)
+      get :show, :id => @user
+      response.should have_selector("span.timestamp", :content => "ago")
+      response.should have_selector("span.timestamp", :content => "ago")
+    end
   end
 
   describe "GET 'new'" do
@@ -98,8 +105,6 @@ describe UsersController do
         post :create, :user => @attr
         controller.should be_signed_in
       end
-
-      it "should create a share directory for the user"
     end
   end
 
@@ -234,10 +239,10 @@ describe UsersController do
       describe "destroying others" do
 
         it "should deny access" do
-         other_user = Factory(:user, :email => "otheruser@example.com")
-         delete :destroy, :id => other_user
-         response.should redirect_to(root_path)
-       end
+          other_user = Factory(:user, :email => "otheruser@example.com")
+          delete :destroy, :id => other_user
+          response.should redirect_to(root_path)
+        end
 
         it "should not destroy the other user" do
           other_user = Factory(:user, :email => "otheruser@example.com")
@@ -245,7 +250,6 @@ describe UsersController do
             delete :destroy, :id => other_user
           end.should_not change(User, :count)
         end
-
       end
 
       describe "destroying self" do
@@ -260,8 +264,6 @@ describe UsersController do
           delete :destroy, :id => @user
           response.should redirect_to(root_path)
         end
-
-        it "should remove the share directory for that user"
       end
     end
 

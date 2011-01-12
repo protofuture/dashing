@@ -17,11 +17,14 @@ class User < ActiveRecord::Base
   attr_accessor :password
   attr_accessible :name, :email, :password, :password_confirmation
 
+  has_many :items, :dependent => :destroy
+
   email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 
   validates :name,  :presence => true,
                     :length   => { :maximum => 50}
 
+  #When creating user directory, convert username to valid and unique filename
   validates :email, :presence   => true,
                     :format     => { :with => email_regex },
                     :uniqueness => { :case_sensitive => false}
@@ -49,6 +52,20 @@ class User < ActiveRecord::Base
   def self.authenticate_with_salt(id, cookie_salt)
     user = find_by_id(id)
     (user && user.salt == cookie_salt) ? user :nil
+  end
+
+  def create
+    super
+    #create the share directory for this user
+    share_path = Rails.root.join(name)
+    Dir.mkdir(share_path) if !File.directory?(share_path)
+  end
+
+  def destroy
+    super
+    #destroy the the share directory for this user
+    share_path = Rails.root.join(name)
+    Dir.rmdir(share_path) if File.directory?(share_path)
   end
 
   private

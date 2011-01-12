@@ -1,2 +1,16 @@
-<h1>Box</h1>
-<p>This is the home page for Box, a web application.</p>
+<% if signed_in? %>
+  <table class="front" summary="For signed-in users">
+    <tr>
+      <td class="main">
+        <h1 class="item">Upload</h1>
+        <%= render 'shared/item_form' %>
+      </td>
+      <td class="sidebar round">
+        <%= render 'shared/user_info' %>
+      </td>
+    </tr>
+  </table>
+<% else %>
+  <h1>Box</h1>
+  <p>This is the home page for Box, a web application.</p>
+<% end %>
