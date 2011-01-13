@@ -57,14 +57,14 @@ class User < ActiveRecord::Base
   def create
     super
     #create the share directory for this user
-    share_path = Rails.root.join(name)
-    Dir.mkdir(share_path) if !File.directory?(share_path)
+    self.share_path = make_share_path(name) 
+    Dir.mkdir(self.share_path) if !File.directory?(self.share_path)
   end
 
   def destroy
+    share_path = String.new(make_share_path(name))
     super
     #destroy the the share directory for this user
-    share_path = Rails.root.join(name)
     Dir.rmdir(share_path) if File.directory?(share_path)
   end
 
@@ -85,5 +85,10 @@ class User < ActiveRecord::Base
 
     def secure_hash(string)
       Digest::SHA2.hexdigest(string)
+    end
+
+    def make_share_path(string)
+      #To Do: ensure share_path is valid (path) and unique
+      Rails.root.join(name).to_s
     end
 end

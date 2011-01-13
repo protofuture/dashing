@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101128182247) do
+ActiveRecord::Schema.define(:version => 20110113060451) do
 
   create_table "items", :force => true do |t|
     t.string   "private_path"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(:version => 20101128182247) do
     t.datetime "updated_at"
     t.string   "encrypted_password"
     t.string   "salt"
+    t.string   "share_path"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

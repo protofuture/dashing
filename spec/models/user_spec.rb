@@ -89,7 +89,6 @@ describe User do
       User.new(hash).should_not be_valid
     end
   end
-
   describe "password encryption" do
 
     before(:each) do
@@ -114,7 +113,6 @@ describe User do
         @user.has_password?("invalid").should be_false
       end
     end
-
     describe "authenticate method" do
 
       it "should return nil on email/password mismatch" do
@@ -155,7 +153,25 @@ describe User do
     end
   end
 
+  #Share Directory
   describe "share directory" do
+
+    describe "share_path attribute" do
+      before(:each) do
+        @user = User.create(@attr)
+      end
+      after(:each) do
+        User.destroy(@user)
+      end
+
+      it "should have a share_path attribute" do
+        @user.should respond_to(:share_path)
+      end
+
+      it "should set the share_path attribute" do
+        @user.share_path.should_not be_blank
+      end
+    end
     it "should create the share directory for the user upon creation" do
       File.directory?(Rails.root.join(@attr[:name])).should be_false
       @user = User.create(@attr)
