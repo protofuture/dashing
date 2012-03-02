@@ -1,5 +1,4 @@
 # == Schema Information
-# Schema version: 20101122021328
 #
 # Table name: users
 #
@@ -10,6 +9,7 @@
 #  updated_at         :datetime
 #  encrypted_password :string(255)
 #  salt               :string(255)
+#  share_path         :string(255)
 #
 
 require 'digest'
