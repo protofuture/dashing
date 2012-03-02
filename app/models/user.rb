@@ -55,14 +55,15 @@ class User < ActiveRecord::Base
   end
 
   def create
-    super
+#super
     #create the share directory for this user
-    self.share_path = make_share_path(name) 
+    self.share_path = make_share_path(email) 
     Dir.mkdir(self.share_path) if !File.directory?(self.share_path)
+    super
   end
 
   def destroy
-    share_path = String.new(make_share_path(name))
+    share_path = String.new(make_share_path(email))
     super
     #destroy the the share directory for this user
     Dir.rmdir(share_path) if File.directory?(share_path)
@@ -88,7 +89,7 @@ class User < ActiveRecord::Base
     end
 
     def make_share_path(string)
-      #To Do: ensure share_path is valid (path) and unique
-      Rails.root.join(name).to_s
+      #To Do: ensure share_path is valid (path)
+      Rails.root.join('users').join(string).to_s
     end
 end

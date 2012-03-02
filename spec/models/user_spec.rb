@@ -184,20 +184,21 @@ describe User do
 
       it "should set the share_path attribute" do
         @user.share_path.should_not be_blank
+        @user.share_path.should eq(Rails.root.join('users').join(@user.email).to_s)
       end
     end
     it "should create the share directory for the user upon creation" do
-      File.directory?(Rails.root.join(@attr[:name])).should be_false
+      File.directory?(Rails.root.join('users').join(@attr[:email])).should be_false
       @user = User.create(@attr)
-      File.directory?(Rails.root.join(@attr[:name])).should be_true
+      File.directory?(Rails.root.join('users').join(@attr[:email])).should be_true
       User.destroy(@user)
     end
 
     it "should destroy the share directory for the user upon destruction" do
       @user = User.create(@attr)
-      File.directory?(Rails.root.join(@user[:name])).should be_true
+      File.directory?(Rails.root.join('users').join(@user[:email])).should be_true
       User.destroy(@user)
-      File.directory?(Rails.root.join(@user[:name])).should be_false
+      File.directory?(Rails.root.join('users').join(@user[:email])).should be_false
     end
   end
 end
