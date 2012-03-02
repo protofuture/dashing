@@ -63,10 +63,9 @@ class User < ActiveRecord::Base
   end
 
   def destroy
-    share_path = String.new(make_share_path(email))
-    super
     #destroy the the share directory for this user
-    Dir.rmdir(share_path) if File.directory?(share_path)
+    Dir.rmdir(self.share_path) if File.directory?(self.share_path)
+    super
   end
 
   private
