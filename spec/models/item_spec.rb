@@ -18,6 +18,9 @@ describe Item do
     @user = Factory(:user)
     @attr = {}
   end
+  after(:each) do
+    User.destroy(@user)
+  end
 
   it "should create a new instance given valid attributes" do
     @user.items.create!(@attr)

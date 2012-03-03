@@ -8,6 +8,9 @@ describe UsersController do
     before(:each) do
       @user = Factory(:user)
     end
+    after(:each) do
+      User.destroy(@user)
+    end
 
     it "should be successful" do
       get :show, :id => @user
@@ -84,6 +87,9 @@ describe UsersController do
         @attr = { :name => "New User", :email => "user@example.com",
                   :password => "foobar", :password_confirmation => "foobar" }
       end
+      after(:each) do
+        User.destroy(assigns(:user))
+      end
 
       it "should create a user" do
         lambda do
@@ -114,6 +120,9 @@ describe UsersController do
       @user = Factory(:user)
       test_sign_in(@user)
     end
+    after(:each) do
+      User.destroy(@user)
+    end
 
     it "should be successful" do
       get :edit, :id => @user
@@ -133,6 +142,9 @@ describe UsersController do
     before(:each) do
       @user = Factory(:user)
       test_sign_in(@user)
+    end
+    after(:each) do
+      User.destroy(@user)
     end
 
     describe "failure" do
@@ -184,6 +196,9 @@ describe UsersController do
     before(:each) do
       @user = Factory(:user)
     end
+    after(:each) do
+      User.destroy(@user)
+    end
 
     describe "for non-signed-in users" do
 
@@ -201,8 +216,11 @@ describe UsersController do
     describe "for signed-in users" do
 
       before(:each) do
-        wrong_user = Factory(:user, :email => "user@example.net")
-        test_sign_in(wrong_user)
+        @wrong_user = Factory(:user, :email => "user@example.net")
+        test_sign_in(@wrong_user)
+      end
+      after(:each) do
+        User.destroy(@wrong_user)
       end
 
       it "should require matching users for 'edit'" do
@@ -222,6 +240,9 @@ describe UsersController do
     before(:each) do
       @user = Factory(:user)
     end
+    after(:each) do
+      User.destroy(@user)
+    end
 
     describe "for non-signed-in users" do
       it "should deny access" do
@@ -238,21 +259,30 @@ describe UsersController do
 
       describe "destroying others" do
 
+        before(:each) do
+          @other_user = Factory(:user, :email => "otheruser@example.com")
+        end
+        after(:each) do
+          User.destroy(@other_user)
+        end
+
         it "should deny access" do
-          other_user = Factory(:user, :email => "otheruser@example.com")
-          delete :destroy, :id => other_user
+          delete :destroy, :id => @other_user
           response.should redirect_to(root_path)
         end
 
         it "should not destroy the other user" do
-          other_user = Factory(:user, :email => "otheruser@example.com")
           lambda do
-            delete :destroy, :id => other_user
+            delete :destroy, :id => @other_user
           end.should_not change(User, :count)
         end
       end
 
       describe "destroying self" do
+
+        after(:each) do
+          @user = Factory(:user)
+        end
 
         it "should destroy self" do
           lambda do
