@@ -31,14 +31,13 @@ class Item < ActiveRecord::Base
   end
 
   def destroy
-#    file_path = File.join(self.user.share_path,private_path)
-#    File.delete(file_path) if File.file?(file_path)
+    File.delete(full_path) if File.file?(full_path)
   super
   end
 
   def file_save
     # write the file
-    File.open(private_path, "wb") { |f| f.write(file.read) }
+    File.open(full_path, "wb") { |f| f.write(file.read) }
   end
 
   def set_path

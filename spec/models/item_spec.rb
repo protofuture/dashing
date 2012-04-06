@@ -18,8 +18,7 @@ describe Item do
     @user = Factory(:user)
     @attr = {
       :shared => true,
-      :file => Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files/TestFile.mp3'),'mp3'),
-      :private_path => "TestFile.mp3"
+      :file => Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files/TestFile.mp3'),'mp3')
     }
   end
   after(:each) do
@@ -49,6 +48,21 @@ describe Item do
       no_filename_item = @user.items.new(@attr.merge(:file =>nil))
       no_filename_item.should_not be_valid
     end
+  end
+
+  it "should create the file upon creation" do
+    filepath = Rails.root.join(@user.share_path,@attr[:file].original_filename)
+    File.file?(filepath).should be_false
+    @item = @user.items.create(@attr)
+    File.file?(filepath).should be_true
+  end
+
+  it "should destroy the file upon destruction" do
+    filepath = Rails.root.join(@user.share_path,@attr[:file].original_filename)
+    @item = @user.items.create(@attr)
+    File.file?(filepath).should be_true
+    @item.destroy
+    File.file?(filepath).should be_false
   end
 
   describe "user associations" do
