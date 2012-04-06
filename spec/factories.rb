@@ -11,5 +11,7 @@ Factory.sequence :email do |n|
 end
 
 Factory.define :item do |item|
+  item.shared true
   item.association :user
+  item.file  Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files/TestFile.mp3'),'mp3')
 end

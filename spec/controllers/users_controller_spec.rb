@@ -34,13 +34,15 @@ describe UsersController do
 
 #    it "should have a profile image"
 
-    it "should show the user's items" do
+    it "should show the user's shared items" do
       i1 = Factory(:item, :user => @user)
       i2 = Factory(:item, :user => @user)
       get :show, :id => @user
       response.should have_selector("span.timestamp", :content => "ago")
       response.should have_selector("span.timestamp", :content => "ago")
     end
+
+    it "should not show the user's non-shared items"
   end
 
   describe "GET 'new'" do

@@ -31,22 +31,24 @@ describe ItemsController do
         @attr = {}
       end
 
-      it "should not create an item" #do
-#        lambda do
-#          post :create, :item => @attr
-#        end.should_not change(Item, :count)
-#      end
+      it "should not create an item" do
+        lambda do
+          post :create, :item => @attr
+        end.should_not change(Item, :count)
+      end
 
-      it "should render the home page" #do
-#        post :create, :item => @attr
-#        response.should render_template('pages/home')
-#      end
+      it "should render the home page" do
+        post :create, :item => @attr
+        response.should render_template('pages/home')
+      end
     end
 
     describe "success" do
 
       before(:each) do
-        @attr = {}
+        @attr = {:file => Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files/TestFile.mp3'),'mp3')}
+#@attr = Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files/TestFile.mp3'),'mp3')
+#@attr = {}
       end
 
       it "should create an item" do

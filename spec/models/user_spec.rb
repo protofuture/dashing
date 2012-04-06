@@ -165,7 +165,9 @@ describe User do
       @user.should respond_to(:items)
     end
 
-#    it "should have the items in the right order"
+    it "should have the right items in the right order" do
+      @user.items.should == [@i2, @i1]
+    end
 
     it "should destroy associated items" do
       @user.destroy

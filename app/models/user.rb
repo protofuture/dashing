@@ -55,7 +55,6 @@ class User < ActiveRecord::Base
   end
 
   def create
-#super
     #create the share directory for this user
     self.share_path = make_share_path(email) 
     Dir.mkdir(self.share_path) if !File.directory?(self.share_path)
@@ -64,7 +63,12 @@ class User < ActiveRecord::Base
 
   def destroy
     #destroy the the share directory for this user
-    Dir.rmdir(self.share_path) if File.directory?(self.share_path)
+    if File.directory?(self.share_path)
+      Dir.foreach(self.share_path) {
+        |f| file_path = File.join(self.share_path,f)
+        File.delete(file_path) if File.file?(file_path) }
+    end
+    Dir.rmdir(self.share_path)
     super
   end
 

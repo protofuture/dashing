@@ -1,3 +1,4 @@
+users/*
 .bundle
 webrat.log
 db/*.sqlite3
