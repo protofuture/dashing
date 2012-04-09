@@ -17,6 +17,16 @@ class ItemsController < ApplicationController
     redirect_back_or root_path
   end
 
+  def get_file
+    @item = Item.find(params[:id])
+    send_file @item.full_path
+  end
+
+  def show
+    @item = Item.find(params[:id])
+    @title = @item.private_path
+  end
+
   private
 
     def authorized_user

@@ -16,6 +16,37 @@ describe ItemsController do
     end
   end
 
+  describe "GET 'show'" do
+
+    before(:each) do
+      @user = test_sign_in(Factory(:user))
+      @item = Factory(:item, :user => @user)
+    end
+    after(:each) do
+      User.destroy(@user)
+    end
+
+    it "should be successful" do
+      get :show, :id => @item
+      response.should be_success
+    end
+
+    it "should find the right item" do
+      get :show, :id => @item
+      assigns(:item).should == @item
+    end
+
+    it "should have the right title" do
+      get :show, :id => @item
+      response.should have_selector("title", :content => @item.private_path)
+    end
+
+    it "should include the item's filename" do
+      get :show, :id => @item
+      response.should have_selector("h1", :content => @item.private_path)
+    end
+  end
+
   describe "POST 'create'" do
 
     before(:each) do
