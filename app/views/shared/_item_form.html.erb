@@ -4,6 +4,10 @@
     <%= f.label 'file', 'Select File' %>:
     <%= f.file_field :file %>
   </div>
+  <div class="field">
+    <%= f.label 'shared', 'Share' %>:
+    <%= f.check_box :shared %>
+  </div>
   <div class="actions">
     <%= f.submit "Submit" %>
   </div>

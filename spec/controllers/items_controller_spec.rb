@@ -77,7 +77,10 @@ describe ItemsController do
     describe "success" do
 
       before(:each) do
-        @attr = {:file => Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files/TestFile.mp3'),'mp3')}
+        @attr = {
+          :file => Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files/TestFile.mp3'),'mp3'),
+          :shared => true
+        }
 #@attr = Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files/TestFile.mp3'),'mp3')
 #@attr = {}
       end
@@ -99,6 +102,62 @@ describe ItemsController do
       end
     end
   end
+
+  describe "GET 'edit" do
+
+    before(:each) do
+      @user = test_sign_in(Factory(:user))
+      @item = Factory(:item, :user => @user)
+    end
+    after(:each) do
+      User.destroy(@user)
+    end
+
+    it "should be successful" do
+      get :edit, :id => @item
+      response.should be_success
+    end
+    it "should have the right title" do
+      get :edit, :id => @item
+      response.should have_selector("title", :content => "Edit item")
+    end
+  end
+
+  describe "PUT 'update'" do
+
+    before(:each) do
+      @user = test_sign_in(Factory(:user))
+      @item = Factory(:item, :user => @user)
+    end
+    after(:each) do
+      User.destroy(@user)
+    end
+
+    describe "failure"
+    describe "success" do
+      before(:each) do
+        @attr = {:shared => false}
+      end
+    
+      it "should change the item's attributes" do
+        put :update, :id => @item, @item => @attr
+        @item.reload
+        @item.shared.should == @attr[:shared]
+      end
+
+      it "should redirect to the item show page" do
+        put :update, :id => @item, @item => @attr
+        response.should redirect_to(item_path(@item))
+      end
+
+      it "should have a flash message" do
+        put :update, :id => @item, @item => @attr
+        flash[:success].should =~ /updated/
+      end
+    end
+  end
+
+  describe "authentication of edit/update pages"
 
   describe "DELETE 'destroy'" do
 
