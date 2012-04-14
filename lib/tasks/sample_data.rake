@@ -15,9 +15,10 @@ namespace :db do
                    :password => password,
                    :password_confirmation => password)
     end
-    50.times do
-      User.all(:limit => 6).each do |user|
-        user.items.create!(:shared => true)
+    10.times do
+      User.all(:limit => 3).each do |user|
+        user.items.create!(:shared => true,
+                           :file => Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files/TestFile.mp3'),'mp3'))
       end
     end
   end

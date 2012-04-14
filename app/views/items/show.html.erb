@@ -9,16 +9,14 @@
               :confirm => "Are you sure?",
               :title => "Delete #{@item.private_path}"
   %><br/><br/>
-<p>
-<%= File.size(@item.full_path) %> bytes.<br/>
-<%= link_to 'You',@item.user %> own this item.<br/>
-Posted <%= time_ago_in_words(@item.created_at) %> ago.<br/>
-Currently <strong><% if !@item.shared%> not <%end%> being shared</strong>.<br/>
-</p>
+  <p>
+  <%= File.size(@item.full_path) %> bytes.<br/>
+  <%= link_to 'You',@item.user %> posted this item <%= time_ago_in_words(@item.created_at) %> ago.<br/>
+  Currently <strong><% if !@item.shared%> not <%end%> being shared</strong>.<br/>
+  </p>
 <% else %>
-<p>
-<%= File.size(@item.full_path) %> bytes.<br/>
-Owned by <%= link_to @item.user.name,@item.user %>.<br/>
-Posted <%= time_ago_in_words(@item.created_at) %> ago.<br/>
-</p>
+  <p>
+  <%= File.size(@item.full_path) %> bytes.<br/>
+  <%= link_to @item.user.name,@item.user %> posted this <%= time_ago_in_words(@item.created_at) %> ago.<br/>
+  </p>
 <% end %>
