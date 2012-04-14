@@ -81,8 +81,6 @@ describe ItemsController do
           :file => Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files/TestFile.mp3'),'mp3'),
           :shared => true
         }
-#@attr = Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files/TestFile.mp3'),'mp3')
-#@attr = {}
       end
 
       it "should create an item" do
@@ -138,7 +136,7 @@ describe ItemsController do
       before(:each) do
         @attr = {:shared => false}
       end
-    
+
       it "should change the item's attributes" do
         put :update, :id => @item, :item => @attr
         @item.reload
@@ -157,7 +155,50 @@ describe ItemsController do
     end
   end
 
-  describe "authentication of edit/update pages"
+  describe "authentication of edit/update pages" do
+
+    before(:each) do
+      @user = Factory(:user)
+      @item = Factory(:item, :user => @user)
+    end
+    after(:each) do
+      User.destroy(@user)
+    end
+
+    describe "for non-signed-in users" do
+
+      it "should deny access to 'edit'" do
+        get :edit, :id => @item
+        response.should redirect_to(signin_path)
+      end
+
+      it "should deny access to 'update'" do
+        put :update, :id => @item, :item => {}
+        response.should redirect_to(signin_path)
+      end
+    end
+
+    describe "for signed-in users" do
+
+      before(:each) do
+        @wrong_user = Factory(:user, :email => Factory.next(:email))
+        test_sign_in(@wrong_user)
+      end
+      after(:each) do
+        User.destroy(@wrong_user)
+      end
+
+      it "should require matching users for 'edit'" do
+        get :edit, :id => @item
+        response.should redirect_to(root_path)
+      end
+
+      it "should require matching users for 'update'" do
+        put :update, :id => @item, :item => {}
+        response.should redirect_to(root_path)
+      end
+    end
+  end
 
   describe "DELETE 'destroy'" do
 
