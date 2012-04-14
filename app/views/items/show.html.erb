@@ -1,15 +1,22 @@
 <h1>
   <%= link_to @item.private_path, :action => :get_file %>
 </h1>
-<%= link_to "edit", edit_item_path(@item) %>
-<%= link_to "delete",
-            @item,
-            :method => :delete,
-            :confirm => "Are you sure?",
-            :title => "Delete #{@item.private_path}"
-%><br/><br/>
+<% if current_user?(@item.user) %>
+  <%= link_to "edit", edit_item_path(@item) %>
+  <%= link_to "delete",
+              @item,
+              :method => :delete,
+              :confirm => "Are you sure?",
+              :title => "Delete #{@item.private_path}"
+  %><br/><br/>
 <p>
-Owned by <%= link_to @item.user.name,@item.user %>.<br/>
+<%= link_to 'You',@item.user %> own this item.<br/>
 Posted <%= time_ago_in_words(@item.created_at) %> ago.<br/>
 Currently <strong><% if !@item.shared%> not <%end%> being shared</strong>.<br/>
 </p>
+<% else %>
+<p>
+Owned by <%= link_to @item.user.name,@item.user %>.<br/>
+Posted <%= time_ago_in_words(@item.created_at) %> ago.<br/>
+</p>
+<% end %>

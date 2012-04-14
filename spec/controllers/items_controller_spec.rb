@@ -103,7 +103,7 @@ describe ItemsController do
     end
   end
 
-  describe "GET 'edit" do
+  describe "GET 'edit'" do
 
     before(:each) do
       @user = test_sign_in(Factory(:user))
@@ -140,18 +140,18 @@ describe ItemsController do
       end
     
       it "should change the item's attributes" do
-        put :update, :id => @item, @item => @attr
+        put :update, :id => @item, :item => @attr
         @item.reload
         @item.shared.should == @attr[:shared]
       end
 
       it "should redirect to the item show page" do
-        put :update, :id => @item, @item => @attr
+        put :update, :id => @item, :item => @attr
         response.should redirect_to(item_path(@item))
       end
 
       it "should have a flash message" do
-        put :update, :id => @item, @item => @attr
+        put :update, :id => @item, :item => @attr
         flash[:success].should =~ /updated/
       end
     end

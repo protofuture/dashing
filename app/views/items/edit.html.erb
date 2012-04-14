@@ -1,0 +1,16 @@
+<h1>Edit <%=@item.private_path%></h1>
+
+<%= form_for @item, :html => { :multipart => true} do |f| %>
+  <%= render 'shared/error_messages', :object => f.object %>
+  <div class="field">
+    <%= f.label 'shared', 'Share' %>:
+    <%= f.check_box :shared %>
+  </div>
+  <div class="actions">
+    <%= f.submit "Update" %>
+  </div>
+  <%= link_to "Delete", @item, :method => :delete,
+                               :confirm => "This will delete #{@item.private_path}. Are you sure?",
+                               :title => "Delete #{@item.private_path}"
+   %>
+<% end %>

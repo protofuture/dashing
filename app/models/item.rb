@@ -18,7 +18,7 @@ class Item < ActiveRecord::Base
 
   validates :user_id, :presence => true
 #  validates :shared, :presence => true
-  validates :file, :presence => true
+  validates :file, :presence => true, :on =>:create
 
   default_scope :order => 'items.created_at DESC'
 

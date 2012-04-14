@@ -37,14 +37,10 @@ describe Item do
       Item.new(@attr).should_not be_valid
     end
 
-    #Shared setting
-    it "should require a shared setting" #do
-#      no_shared_item = @user.items.new(@attr.merge(:shared => nil))
-#      no_shared_item.should_not be_valid
-#    end
+    #Shared setting isn't required
 
     #Filename
-    it "should require a file upload" do
+    it "should require a file upload upon creation" do
       no_filename_item = @user.items.new(@attr.merge(:file =>nil))
       no_filename_item.should_not be_valid
     end

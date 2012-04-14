@@ -14,6 +14,7 @@ class ItemsController < ApplicationController
 
   def destroy
     @item.destroy
+    flash[:success] = "Item deleted."
     redirect_back_or root_path
   end
 
@@ -25,6 +26,23 @@ class ItemsController < ApplicationController
   def show
     @item = Item.find(params[:id])
     @title = @item.private_path
+  end
+
+  def edit
+    @item = Item.find(params[:id])
+    @title = "Edit item"
+  end
+
+  def update
+    @item = Item.find(params[:id])
+    @title = "Edit item"
+    if @item.update_attributes(params[:item])
+      flash[:success] = "Item updated."
+      redirect_to @item
+    else
+      @title = "Edit item"
+      render 'edit'
+    end
   end
 
   private
