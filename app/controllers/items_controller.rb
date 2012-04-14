@@ -55,12 +55,12 @@ class ItemsController < ApplicationController
 
     def shared_item
       @item = Item.find(params[:id])
-      if signed_in?
-        unless @item.shared? or current_user?(@item.user)
-          redirect_to root_path 
+      if !@item.shared?
+        if !signed_in?
+          redirect_to signin_path
+        else
+          redirect_to root_path unless current_user?(@item.user)
         end
-      else
-        redirect_to signin_path
       end
     end
 end
