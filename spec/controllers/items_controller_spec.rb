@@ -200,6 +200,52 @@ describe ItemsController do
     end
   end
 
+  describe "authentication of non-shared items" do
+
+    before(:each) do
+      @user = Factory(:user)
+      @item = Factory(:item, :user => @user)
+      @item.update_attribute(:shared,false)
+    end
+    after(:each) do
+      User.destroy(@user)
+    end
+
+    describe "for non-signed-in users" do
+
+      it "should deny access to 'show'" do
+        get :show, :id => @item
+        response.should redirect_to(signin_path)
+      end
+
+      it "should deny access to 'get_file'" do
+        get :get_file, :id => @item
+        response.should redirect_to(signin_path)
+      end
+    end
+
+    describe "for signed-in users" do
+
+      before(:each) do
+        @wrong_user = Factory(:user, :email => Factory.next(:email))
+        test_sign_in(@wrong_user)
+      end
+      after(:each) do
+        User.destroy(@wrong_user)
+      end
+
+      it "should require matching users for 'show'" do
+        get :show, :id => @item
+        response.should redirect_to(root_path)
+      end
+
+      it "should require matching users for 'get_file'" do
+        get :get_file, :id => @item
+        response.should redirect_to(root_path)
+      end
+    end
+  end
+
   describe "DELETE 'destroy'" do
 
     describe "for an unauthorized user" do

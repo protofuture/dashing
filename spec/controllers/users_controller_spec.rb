@@ -42,7 +42,13 @@ describe UsersController do
       response.should have_selector("span.timestamp", :content => "ago")
     end
 
-    it "should not show the user's non-shared items"
+    it "should not show the user's non-shared items" do
+      i = Factory(:item, :user => @user)
+      i.update_attribute(:shared,false)
+      get :show, :id => @user
+      response.should_not have_selector("span.timestamp", :content => "ago")
+    end
+
   end
 
   describe "GET 'new'" do
