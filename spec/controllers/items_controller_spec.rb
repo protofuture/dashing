@@ -47,6 +47,22 @@ describe ItemsController do
     end
   end
 
+  describe "GET 'get_file'" do
+
+    before(:each) do
+      @user = test_sign_in(Factory(:user))
+      @item = Factory(:item, :user => @user)
+    end
+    after(:each) do
+      User.destroy(@user)
+    end
+
+    it "should be successful" do
+      get :get_file, :id => @item
+      response.should be_success
+    end
+  end
+
   describe "POST 'create'" do
 
     before(:each) do
@@ -155,7 +171,7 @@ describe ItemsController do
     end
   end
 
-  describe "authentication of edit/update pages" do
+  describe "authentication of get_file/edit/update pages" do
 
     before(:each) do
       @user = Factory(:user)
@@ -166,6 +182,11 @@ describe ItemsController do
     end
 
     describe "for non-signed-in users" do
+
+      it "should allow access to 'get_file'" do
+        get :get_file, :id => @item
+        response.should be_success
+      end
 
       it "should deny access to 'edit'" do
         get :edit, :id => @item
@@ -186,6 +207,11 @@ describe ItemsController do
       end
       after(:each) do
         User.destroy(@wrong_user)
+      end
+
+      it "should allow access to 'get_file'" do
+        get :get_file, :id => @item
+        response.should be_success
       end
 
       it "should require matching users for 'edit'" do
