@@ -1,6 +1,6 @@
 class ItemsController < ApplicationController
-  before_filter :authenticate, :only => [:create, :destroy]
-  before_filter :authorized_user, :only => [:destroy]
+  before_filter :authenticate, :only => [:create, :edit, :update, :destroy]
+  before_filter :authorized_user, :only => [:edit, :update, :destroy]
 
   def create
     @item = current_user.items.build(params[:item])
