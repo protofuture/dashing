@@ -236,4 +236,11 @@ form.new_item textarea {
   height: 4em;
   margin-bottom: 0;
 }
+/*User index page*/
+ul.users {
+  margin-top: 1em;
+}
+.users li {
+  list-style: none;
+}
 
