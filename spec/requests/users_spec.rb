@@ -31,7 +31,7 @@ describe "Users" do
           fill_in "Confirmation", :with => "foobar"
           click_button
           response.should have_selector("div.flash.success",
-                                        :content => "Welcome")
+                                        :content => "created")
           response.should render_template('users/show')
         end.should change(User, :count).by(1)
         User.destroy(assigns(:user))

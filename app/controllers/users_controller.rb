@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   before_filter :authenticate, :only => [:index, :edit, :update, :destroy]
   before_filter :correct_user, :only => [:edit, :update]
   before_filter :admin_user, :only => :index
+  before_filter :create_new_user, :only => [:new,:create]
   before_filter :user_destroy, :only => :destroy
 
   def index
@@ -17,17 +18,17 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
-    @title = "Sign up"
+    @title = "New User"
   end
 
   def create
     @user = User.new(params[:user])
     if @user.save
-      sign_in @user
-      flash[:success] = "Welcome to Box!"
+      sign_in @user unless signed_in?
+      flash[:success] = "A new account was successfuly created."
       redirect_to @user
     else
-      @title = "Sign up"
+      @title = "New User"
       render 'new'
     end
   end
@@ -65,6 +66,17 @@ class UsersController < ApplicationController
     end
 
     def admin_user
+      redirect_to(root_path) unless current_user.admin?
+    end
+
+    def create_new_user
+      unless signed_in?
+        if User.all.empty? #First user can be create itself.
+          return
+        else
+          deny_access and return
+        end
+      end #All other users are created by admin.
       redirect_to(root_path) unless current_user.admin?
     end
 
