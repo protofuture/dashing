@@ -10,6 +10,7 @@
 #  encrypted_password :string(255)
 #  salt               :string(255)
 #  share_path         :string(255)
+#  admin              :boolean         default(FALSE)
 #
 
 require 'digest'
