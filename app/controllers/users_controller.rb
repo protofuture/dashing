@@ -24,6 +24,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(params[:user])
     if @user.save
+      @user.toggle!(:admin) if User.first == @user #Make the first user an admin
       sign_in @user unless signed_in?
       flash[:success] = "A new account was successfuly created."
       redirect_to @user

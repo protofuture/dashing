@@ -218,6 +218,11 @@ describe UsersController do
           end.should change(User, :count).by(1)
         end
 
+        it "should make the user an admin" do
+          post :create, :user => @attr
+          assigns(:user).should be_admin
+        end
+
         it "should redirect to the user show page" do
           post :create, :user => @attr
           response.should redirect_to(user_path(assigns(:user)))
