@@ -13,10 +13,22 @@ describe UsersController do
       end
     end
 
+    describe "for non-admin users" do
+      it "should deny access" do
+        @user = test_sign_in(Factory(:user))
+        get :index
+        response.should redirect_to(root_path)
+#flash[:notice].should =~ /sign in/i
+        User.destroy(@user)
+      end
+    end
+
     describe "for admin users" do
 
       before(:each) do
-        @user = test_sign_in(Factory(:user)) #add 'admin => true'
+        @user = Factory(:user)
+        @user.toggle!(:admin) #Make this user an admin
+        test_sign_in(@user)
         second = Factory(:user, :name => "Bob", :email => "another@example.com")
         third  = Factory(:user, :name => "Ben", :email => "athird@example.com")
         @users = [@user, second, third]
