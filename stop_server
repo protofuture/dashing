@@ -1,0 +1,6 @@
+#!/bin/bash
+
+#Stop the thin app servers
+echo "Stopping thin app servers."
+bundle exec thin stop -s 2
+

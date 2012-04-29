@@ -1,0 +1,9 @@
+#!/bin/bash
+
+#Start the thin app servers
+echo "Starting thin app servers."
+bundle exec thin start -s 2
+
+#Start the lighttpd web server
+echo "Starting lighttpd web server."
+sudo lighttpd -D -f lighttpd.conf

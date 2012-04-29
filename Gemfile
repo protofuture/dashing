@@ -1,6 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'rails', '3.0.11'
+gem 'thin', '~> 1.3.1'
 gem 'sqlite3', '1.3.3'
 gem 'will_paginate', '3.0.pre2'
 
