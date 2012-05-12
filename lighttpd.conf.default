@@ -16,7 +16,8 @@ server.modules              = (
             "mod_alias",
             "mod_accesslog",
             "mod_compress",
-            "mod_proxy",
+            "mod_proxy_core",
+            "mod_proxy_backend_http"
 #           "mod_rewrite",
 #           "mod_redirect",
 #           "mod_evhost",
@@ -95,6 +96,12 @@ server.dir-listing          = "enable"
 ## send unhandled HTTP-header headers to error-log
 #debug.dump-unknown-headers  = "enable"
 
+#debug.log-file-not-found = "enable"
+#debug.log-request-header = "enable"
+#debug.log-request-header-on-error = "enable"
+#debug.log-request-handling = "enable"
+#debug.log-response-header = "enable"
+
 ### only root can use these options
 #
 # chroot() to directory (default: no chroot() )
@@ -149,11 +156,11 @@ compress.filetype           = ("text/plain", "text/html", "application/x-javascr
 
 #### external configuration files
 ## mimetype mapping
-include_shell "/usr/share/lighttpd/create-mime.assign.pl"
+include_shell "/etc/lighttpd/create-mime.assign.pl"
 
 ## load enabled configuration files,
 ## read /etc/lighttpd/conf-available/README first
-include_shell "/usr/share/lighttpd/include-conf-enabled.pl"
+#include_shell "/usr/share/lighttpd/include-conf-enabled.pl"
 
 #$HTTP["host"] =~ "(^|\.)localhost$" {
 #        server.document-root = var.railspublic
@@ -165,9 +172,14 @@ include_shell "/usr/share/lighttpd/include-conf-enabled.pl"
 #        }
 #}
 $HTTP["url"] !~ "\.(js|css|gif|jpg|png|ico|txt|swf|html|htm|svg)$" {
-      proxy.server = (""  => (
-                              ("host" => "127.0.0.1", "port" => 3000),
-                              ("host" => "127.0.0.1", "port" => 3001)
-                             )
-                     )
+      proxy-core.protocol = "http"
+      proxy-core.balancer = "round-robin"
+      proxy-core.backends =  (
+          "127.0.0.1:3000",
+          "127.0.0.1:3001"
+      )
+      proxy-core.allow-x-sendfile = "enable"
+      proxy-core.rewrite-request = (
+        "X-Sendfile-Type" => (".*" => "X-Sendfile")
+      )
 }
