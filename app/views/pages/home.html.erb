@@ -12,9 +12,11 @@
   </table>
 <% else %>
   <h1>Box</h1>
-  <p>This is the home page for Box, a web application.
-  <% if User.all.empty? %>
-    <%= link_to "Sign up!", signup_path %>
-  <% end %>
+  <p>Welcome to Box, a web application that lets you store and share data.
   </p>
+  <% if User.all.empty? %>
+    <p>The first account you create will have admin privileges, allowing it to create and delete other accounts.
+    <br/><%= link_to "Sign up!", signup_path %>
+    </p>
+  <% end %>
 <% end %>
