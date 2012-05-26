@@ -15,10 +15,7 @@
     <td class="sidebar round">
       <strong>Name</strong> <%= @user.name %><br />
       <strong>URL</strong>  <%= link_to user_path(@user), @user %><br />
-      <strong><%if current_user?(@user) %>Shared <%end%>Items</strong> <%= @user.items.where(:shared => true).count %><br />
-      <% if current_user?(@user) %>
-      <strong>Private Items</strong> <%= @user.items.where(:shared => false).count %><br />
-      <% end %>
+      <strong>Items</strong> <%= @user.items.where(:shared => true).count %><br />
     </td>
   </tr>
 </table>

@@ -1,7 +1,11 @@
 class PagesController < ApplicationController
   def home
     @title = "Home"
-    @item = Item.new if signed_in?
+    if signed_in?
+      @item = Item.new
+      @shared_items = current_user.items.where(:shared => true)
+      @private_items = current_user.items.where(:shared => false)
+    end
   end
 
   def contact

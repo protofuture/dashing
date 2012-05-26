@@ -4,6 +4,22 @@
       <td class="main">
         <h1 class="item">Upload</h1>
         <%= render 'shared/item_form' %>
+        <h1>Private Items</h1>
+        <% if @private_items.empty? %>
+          <p>None.</p>
+        <% else %>
+          <table class="items" summary="User items">
+            <%= render @private_items %>
+          </table>
+        <% end %>
+        <h1>Shared Items</h1>
+        <% if @shared_items.empty? %>
+          <p>None.</p>
+        <% else %>
+          <table class="items" summary="User items">
+            <%= render @shared_items %>
+          </table>
+        <% end %>
       </td>
       <td class="sidebar round">
         <%= render 'shared/user_info' %>
@@ -19,5 +35,7 @@
     The first account you create will have admin privileges, allowing it to create and delete other accounts.<br />
     <%= link_to "Sign up!", signup_path %>
     </p>
+  <% else %>
+    <%= render 'shared/sign_in_form' %>
   <% end %>
 <% end %>

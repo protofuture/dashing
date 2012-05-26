@@ -4,6 +4,8 @@ class ItemsController < ApplicationController
   before_filter :shared_item, :only => [:show, :get_file]
 
   def create
+    @private_items = current_user.items.where(:shared => false)
+    @shared_items = current_user.items.where(:shared => true)
     @item = current_user.items.build(params[:item])
     if @item.save
       flash[:success] = "Item created!"

@@ -3,8 +3,9 @@
     <span class="user_name">
       <%= current_user.name %>
     </span><br />
-    <span class="items">
-      <%= pluralize(current_user.items.count, "item") %>
-    </span>
   </a>
+  <span>
+    <strong>Private Items</strong> <%= @private_items.count %><br />
+    <strong>Shared Items</strong> <%= @shared_items.count %><br />
+  </span>
 </div>

@@ -29,7 +29,6 @@ describe "User pages" do
       end
 
       after do
-#User.destroy(assigns(:user))
       #The test will create a directory, we need to remove it.
       FileUtils.rm_rf Dir.glob("#{Rails.root}/users/user@example.com")
       end
@@ -68,12 +67,11 @@ describe "User pages" do
 
       after { User.destroy(user) }
 
-      it { should have_selector('title', text: user.name) }
+      #should be at the home page
+      it { should have_selector('title', text: 'Home') }
       it { should have_link('Profile', href: user_path(user)) }
       it { should have_link('Sign out', href: signout_path) }
       it { should_not have_link('Sign in', href: signin_path) }
-      #should be at the profile page (make this the home/upload page)
-      #it { should have_selector("h1", :text => @user.name) }
 
       describe "followed by signout" do
         before { click_link "Sign out" }
