@@ -19,8 +19,8 @@ describe ItemsController do
   describe "GET 'show'" do
 
     before(:each) do
-      @user = test_sign_in(Factory(:user))
-      @item = Factory(:item, :user => @user)
+      @user = test_sign_in(create(:user))
+      @item = create(:item, :user => @user)
     end
     after(:each) do
       User.destroy(@user)
@@ -38,20 +38,20 @@ describe ItemsController do
 
     it "should have the right title" do
       get :show, :id => @item
-      response.should have_selector("title", :content => @item.private_path)
+      response.body.should have_selector("title", :content => @item.private_path)
     end
 
     it "should include the item's filename" do
       get :show, :id => @item
-      response.should have_selector("h1", :content => @item.private_path)
+      response.body.should have_selector("h1", :content => @item.private_path)
     end
   end
 
   describe "GET 'get_file'" do
 
     before(:each) do
-      @user = test_sign_in(Factory(:user))
-      @item = Factory(:item, :user => @user)
+      @user = test_sign_in(create(:user))
+      @item = create(:item, :user => @user)
     end
     after(:each) do
       User.destroy(@user)
@@ -66,7 +66,7 @@ describe ItemsController do
   describe "POST 'create'" do
 
     before(:each) do
-      @user = test_sign_in(Factory(:user))
+      @user = test_sign_in(create(:user))
     end
     after(:each) do
       User.destroy(@user)
@@ -120,8 +120,8 @@ describe ItemsController do
   describe "GET 'edit'" do
 
     before(:each) do
-      @user = test_sign_in(Factory(:user))
-      @item = Factory(:item, :user => @user)
+      @user = test_sign_in(create(:user))
+      @item = create(:item, :user => @user)
     end
     after(:each) do
       User.destroy(@user)
@@ -133,15 +133,15 @@ describe ItemsController do
     end
     it "should have the right title" do
       get :edit, :id => @item
-      response.should have_selector("title", :content => "Edit item")
+      response.body.should have_selector("title", :content => "Edit item")
     end
   end
 
   describe "PUT 'update'" do
 
     before(:each) do
-      @user = test_sign_in(Factory(:user))
-      @item = Factory(:item, :user => @user)
+      @user = test_sign_in(create(:user))
+      @item = create(:item, :user => @user)
     end
     after(:each) do
       User.destroy(@user)
@@ -174,8 +174,8 @@ describe ItemsController do
   describe "authentication of get_file/edit/update pages" do
 
     before(:each) do
-      @user = Factory(:user)
-      @item = Factory(:item, :user => @user)
+      @user = create(:user)
+      @item = create(:item, :user => @user)
     end
     after(:each) do
       User.destroy(@user)
@@ -202,7 +202,7 @@ describe ItemsController do
     describe "for signed-in users" do
 
       before(:each) do
-        @wrong_user = Factory(:user, :email => Factory.next(:email))
+        @wrong_user = create(:user)
         test_sign_in(@wrong_user)
       end
       after(:each) do
@@ -229,8 +229,8 @@ describe ItemsController do
   describe "authentication of non-shared items" do
 
     before(:each) do
-      @user = Factory(:user)
-      @item = Factory(:item, :user => @user)
+      @user = create(:user)
+      @item = create(:item, :user => @user)
       @item.update_attribute(:shared,false)
     end
     after(:each) do
@@ -253,7 +253,7 @@ describe ItemsController do
     describe "for signed-in users" do
 
       before(:each) do
-        @wrong_user = Factory(:user, :email => Factory.next(:email))
+        @wrong_user = create(:user)
         test_sign_in(@wrong_user)
       end
       after(:each) do
@@ -277,10 +277,10 @@ describe ItemsController do
     describe "for an unauthorized user" do
 
       before(:each) do
-        @user = Factory(:user)
-        @wrong_user = Factory(:user, :email => Factory.next(:email))
+        @user = create(:user)
+        @wrong_user = create(:user)
         test_sign_in(@wrong_user)
-        @item = Factory(:item, :user => @user)
+        @item = create(:item, :user => @user)
       end
       after(:each) do
         User.destroy(@user)
@@ -296,8 +296,8 @@ describe ItemsController do
     describe "for an authorized user" do
 
       before(:each) do
-        @user = test_sign_in(Factory(:user))
-        @item = Factory(:item, :user => @user)
+        @user = test_sign_in(create(:user))
+        @item = create(:item, :user => @user)
       end
       after(:each) do
         User.destroy(@user)

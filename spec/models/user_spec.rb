@@ -155,8 +155,8 @@ describe User do
   describe "item associations" do
     before(:each) do
       @user = User.create(@attr)
-      @i1 = Factory(:item, :user => @user, :created_at => 1.day.ago)
-      @i2 = Factory(:item, :user => @user, :created_at => 1.hour.ago)
+      @i1 = FactoryGirl.create(:item, :user => @user, :created_at => 1.day.ago)
+      @i2 = FactoryGirl.create(:item, :user => @user, :created_at => 1.hour.ago)
     end
     after(:each) do
       User.destroy(@user)

@@ -1,67 +1,85 @@
 require 'spec_helper'
 
-describe "Users" do
+describe "User pages" do
+
+  subject { page }
 
   describe "signup" do
 
-    describe "failure" do
+    before { visit signup_path }
+
+    let(:submit) { "Create" }
+
+    describe "with invalid information" do
 
       it "should not make a new user" do
-        lambda do
-          visit signup_path
-          fill_in "Name",         :with => ""
-          fill_in "Email",        :with => ""
-          fill_in "Password",     :with => ""
-          fill_in "Confirmation", :with => ""
-          click_button
-          response.should render_template('users/new')
-          response.should have_selector("div#error_explanation")
-        end.should_not change(User, :count)
+        expect { click_button submit }.not_to change(User, :count)
       end
+
+      describe "error messages"
     end
 
-    describe "success" do
+    describe "with valid information" do
+
+      before do
+        fill_in "Name",         :with => "Example User"
+        fill_in "Email",        :with => "user@example.com"
+        fill_in "Password",     :with => "foobar"
+        fill_in "Confirmation", :with => "foobar"
+      end
+
+      after do
+#User.destroy(assigns(:user))
+      #The test will create a directory, we need to remove it.
+      FileUtils.rm_rf Dir.glob("#{Rails.root}/users/user@example.com")
+      end
 
       it "should make a new user" do
-        lambda do
-          visit signup_path
-          fill_in "Name",         :with => "Example User"
-          fill_in "Email",        :with => "user@example.com"
-          fill_in "Password",     :with => "foobar"
-          fill_in "Confirmation", :with => "foobar"
-          click_button
-          response.should have_selector("div.flash.success",
-                                        :content => "created")
-          response.should render_template('users/show')
-        end.should change(User, :count).by(1)
-        User.destroy(assigns(:user))
+        expect { click_button submit }.to change(User, :count).by(1)
       end
+
+      describe "after saving the user"
     end
   end
 
-  describe "sign in/out" do
+  describe "sign in" do
 
-    describe "failure" do
+    before { visit signin_path }
+
+    let(:submit) { "Sign in" }
+
+    describe "with invalid information" do
       it "should not sign a user in" do
-        visit signin_path
-        fill_in :email,    :with => ""
-        fill_in :password, :with => ""
-        click_button
-        response.should have_selector("div.flash.error", :content => "Invalid")
+        click_button submit
+        should have_selector("div.flash.error", :text => "Invalid")
+        #should not be signed in
+        should have_selector("h1", :text => "Sign in")
       end
     end
 
-    describe "success" do
-      it "should sign a user in and out" do
-        @user = Factory(:user)
-        visit signin_path
-        fill_in :email,    :with => @user.email
-        fill_in :password, :with => @user.password
-        click_button
-        controller.should be_signed_in
-        click_link "Sign out"
-        controller.should_not be_signed_in
-        User.destroy(@user)
+    describe "with valid information" do
+      let(:user) { FactoryGirl.create(:user) }
+
+      before do
+        fill_in 'Email',    :with => user.email
+        fill_in 'Password', :with => user.password
+        click_button submit
+      end
+
+      after { User.destroy(user) }
+
+      it { should have_selector('title', text: user.name) }
+      it { should have_link('Profile', href: user_path(user)) }
+      it { should have_link('Sign out', href: signout_path) }
+      it { should_not have_link('Sign in', href: signin_path) }
+      #should be at the profile page (make this the home/upload page)
+      #it { should have_selector("h1", :text => @user.name) }
+
+      describe "followed by signout" do
+        before { click_link "Sign out" }
+          it { should have_link('Sign in') }
+          #should be at the home page (make this the signin page)
+#          it {should have_selector("p", :text => "Welcome to") }
       end
     end
   end

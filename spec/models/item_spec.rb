@@ -15,7 +15,7 @@ require 'spec_helper'
 describe Item do
 
   before(:each) do
-    @user = Factory(:user)
+    @user = FactoryGirl.create(:user)
     @attr = {
       :shared => true,
       :file => Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files/TestFile.mp3'),'mp3')

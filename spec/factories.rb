@@ -1,21 +1,19 @@
 #By using the symbol ':user', we get Factory Girl to simulate the User model.
-Factory.define :user do |user|
-  user.name                   "Factory User"
-  user.email                  "factory@example.com"
-  user.password               "foobar"
-  user.password_confirmation  "foobar"
-end
+FactoryGirl.define do
+  factory :user do
+    sequence(:name)        { |n| "Person #{n}" }
+    sequence(:email)       { |n| "person#{n}@example.com" }
+    password               "foobar"
+    password_confirmation  "foobar"
 
-Factory.sequence :name do |n|
-  "Person #{n}"
-end
+    factory :admin do
+      admin true
+    end
+  end
 
-Factory.sequence :email do |n|
-  "person-#{n}@example.com"
-end
-
-Factory.define :item do |item|
-  item.shared true
-  item.association :user
-  item.file  Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files/TestFile.mp3'),'mp3')
+  factory :item do
+    shared true
+    association :user
+    file  Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files/TestFile.mp3'),'mp3')
+  end
 end

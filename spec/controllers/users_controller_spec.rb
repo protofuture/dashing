@@ -15,7 +15,8 @@ describe UsersController do
 
     describe "as a non-admin user" do
       it "should deny access" do
-        @user = test_sign_in(Factory(:user))
+        @user = FactoryGirl.create(:user)
+        test_sign_in @user
         get :index
         response.should redirect_to(root_path)
 #flash[:notice].should =~ /sign in/i
@@ -26,13 +27,13 @@ describe UsersController do
     describe "as an admin user" do
 
       before(:each) do
-        @admin = test_sign_in(Factory(:user, :admin => true))
-        second = Factory(:user, :name => "Bob", :email => "another@example.com")
-        third  = Factory(:user, :name => "Ben", :email => "athird@example.com")
+        @admin = test_sign_in(FactoryGirl.create(:admin))
+        controller.should be_signed_in
+        second = FactoryGirl.create(:user, :name => "Bob", :email => "another@example.com")
+        third  = FactoryGirl.create(:user, :name => "Ben", :email => "athird@example.com")
         @users = [@admin, second, third]
         30.times do
-          @users << Factory(:user, :name => Factory.next(:name),
-                                   :email => Factory.next(:email))
+          @users << FactoryGirl.create(:user)
         end
       end
       after(:each) do
@@ -46,24 +47,24 @@ describe UsersController do
 
       it "should have the right title" do
         get :index
-        response.should have_selector("title", :content => "All users")
+        response.body.should have_selector("title", :text => "All users")
       end
 
       it "should have an element for each user" do
         get :index
         @users[0..2].each do |user|
-          response.should have_selector("li", :content => user.name)
+          response.body.should have_selector("li", :text => user.name)
         end
       end
 
       it "should paginate users" do
         get :index
-        response.should have_selector("div.pagination")
-        response.should have_selector("span.disabled", :content => "Previous")
-        response.should have_selector("a", :href => "/users?page=2",
-                                           :content => "2")
-        response.should have_selector("a", :href => "/users?page=2",
-                                           :content => "Next")
+        response.body.should have_selector("div.pagination")
+        response.body.should have_selector("span.disabled", :text => "Previous")
+        response.body.should have_selector("a", :href => "/users?page=2",
+                                           :text => "2")
+        response.body.should have_selector("a", :href => "/users?page=2",
+                                           :text => "Next")
       end
     end
   end
@@ -71,7 +72,7 @@ describe UsersController do
   describe "GET 'show'" do
 
     before(:each) do
-      @user = Factory(:user)
+      @user = FactoryGirl.create(:user)
     end
     after(:each) do
       User.destroy(@user)
@@ -89,37 +90,37 @@ describe UsersController do
 
     it "should have the right title" do
       get :show, :id => @user
-      response.should have_selector("title", :content => @user.name)
+      response.body.should have_selector("title", :text => @user.name)
     end
 
     it "should include the user's name" do
       get :show, :id => @user
-      response.should have_selector("h1", :content => @user.name)
+      response.body.should have_selector("h1", :text => @user.name)
     end
 
 #    it "should have a profile image"
 
     it "should show the user's shared items" do
-      i1 = Factory(:item, :user => @user)
-      i2 = Factory(:item, :user => @user)
+      i1 = FactoryGirl.create(:item, :user => @user)
+      i2 = FactoryGirl.create(:item, :user => @user)
       get :show, :id => @user
-      response.should have_selector("span.timestamp", :content => "ago")
-      response.should have_selector("span.timestamp", :content => "ago")
+      response.body.should have_selector("span.timestamp", :text => "ago")
+      response.body.should have_selector("span.timestamp", :text => "ago")
     end
 
     it "should show the user's own non-shared items" do
-      i = Factory(:item, :user => @user)
+      i = FactoryGirl.create(:item, :user => @user)
       i.update_attribute(:shared,false)
       test_sign_in(@user)
       get :show, :id => @user
-      response.should have_selector("span.timestamp", :content => "ago")
+      response.body.should have_selector("span.timestamp", :text => "ago")
     end
 
     it "should not show the user's non-shared items to other users" do
-      i = Factory(:item, :user => @user)
+      i = FactoryGirl.create(:item, :user => @user)
       i.update_attribute(:shared,false)
       get :show, :id => @user
-      response.should_not have_selector("span.timestamp", :content => "ago")
+      response.body.should_not have_selector("span.timestamp", :text => "ago")
     end
   end
 
@@ -135,7 +136,7 @@ describe UsersController do
     describe "as a non-signed-in non-first user" do
 
       it "should deny access" do
-        @first = Factory(:user)
+        @first = FactoryGirl.create(:user)
         get 'new'
         response.should redirect_to(signin_path)
         flash[:notice].should =~ /sign in/i
@@ -146,7 +147,7 @@ describe UsersController do
     describe "as a non-admin user" do
 
       it "should deny access" do
-        @user = test_sign_in(Factory(:user))
+        @user = test_sign_in(FactoryGirl.create(:user))
         get 'new'
         response.should redirect_to(root_path)
         User.destroy(@user)
@@ -156,7 +157,7 @@ describe UsersController do
     describe "as an admin user" do
 
       before(:each) do
-        @admin = test_sign_in(Factory(:user, :admin => true))
+        @admin = test_sign_in(FactoryGirl.create(:user, :admin => true))
       end
       after(:each) do
         User.destroy(@admin)
@@ -169,7 +170,7 @@ describe UsersController do
 
       it "should have the right title" do
         get 'new'
-        response.should have_selector("title", :content => "New User")
+        response.body.should have_selector("title", :text => "New User")
       end
     end
   end
@@ -193,7 +194,7 @@ describe UsersController do
 
         it "should have the right title" do
           post :create, :user => @attr
-          response.should have_selector("title", :content => "New User")
+          response.body.should have_selector("title", :text => "New User")
         end
 
         it "should render the 'new' page" do
@@ -243,7 +244,7 @@ describe UsersController do
     describe "as a non-signed-in non-first user" do
 
       it "should deny access" do
-        @first = Factory(:user)
+        @first = FactoryGirl.create(:user)
         post :create, :user => {}
         response.should redirect_to(signin_path)
         flash[:notice].should =~ /sign in/i
@@ -254,7 +255,7 @@ describe UsersController do
     describe "as a non-admin user" do
 
       it "should deny access" do
-        @user = test_sign_in(Factory(:user))
+        @user = test_sign_in(FactoryGirl.create(:user))
         post :create, :user => {}
         response.should redirect_to(root_path)
         User.destroy(@user)
@@ -264,7 +265,7 @@ describe UsersController do
     describe "as an admin user" do
 
       before(:each) do
-        @admin = test_sign_in(Factory(:user, :admin => true))
+        @admin = test_sign_in(FactoryGirl.create(:user, :admin => true))
       end
       after(:each) do
         User.destroy(@admin)
@@ -285,7 +286,7 @@ describe UsersController do
 
         it "should have the right title" do
           post :create, :user => @attr
-          response.should have_selector("title", :content => "New User")
+          response.body.should have_selector("title", :text => "New User")
         end
 
         it "should render the 'new' page" do
@@ -331,7 +332,7 @@ describe UsersController do
   describe "GET 'edit'" do
 
     before(:each) do
-      @user = Factory(:user)
+      @user = FactoryGirl.create(:user)
       test_sign_in(@user)
     end
     after(:each) do
@@ -345,7 +346,7 @@ describe UsersController do
 
     it "should have the right title" do
       get :edit, :id => @user
-      response.should have_selector("title", :content => "Edit user")
+      response.body.should have_selector("title", :text => "Edit user")
     end
 
 #    it "should have a link to change the Gravatar" do
@@ -354,7 +355,7 @@ describe UsersController do
   describe "PUT 'update'" do
 
     before(:each) do
-      @user = Factory(:user)
+      @user = FactoryGirl.create(:user)
       test_sign_in(@user)
     end
     after(:each) do
@@ -375,7 +376,7 @@ describe UsersController do
 
       it "should have the right title" do
         put :update, :id => @user, :user => @attr
-        response.should have_selector("title", :content => "Edit user")
+        response.body.should have_selector("title", :text => "Edit user")
       end
     end
 
@@ -408,7 +409,7 @@ describe UsersController do
   describe "authentication of edit/update pages" do
 
     before(:each) do
-      @user = Factory(:user)
+      @user = FactoryGirl.create(:user)
     end
     after(:each) do
       User.destroy(@user)
@@ -430,7 +431,7 @@ describe UsersController do
     describe "for signed-in users" do
 
       before(:each) do
-        @wrong_user = Factory(:user, :email => "user@example.net")
+        @wrong_user = FactoryGirl.create(:user, :email => "user@example.net")
         test_sign_in(@wrong_user)
       end
       after(:each) do
@@ -452,7 +453,7 @@ describe UsersController do
   describe "DELETE 'destroy'" do
 
     before(:each) do
-      @user = Factory(:user)
+      @user = FactoryGirl.create(:user)
     end
     after(:each) do
       User.destroy(@user)
@@ -474,7 +475,7 @@ describe UsersController do
       describe "destroying others" do
 
         before(:each) do
-          @other_user = Factory(:user, :email => "otheruser@example.com")
+          @other_user = FactoryGirl.create(:user, :email => "otheruser@example.com")
         end
         after(:each) do
           User.destroy(@other_user)
@@ -495,7 +496,7 @@ describe UsersController do
       describe "destroying self" do
 
         after(:each) do
-          @user = Factory(:user)
+          @user = FactoryGirl.create(:user)
         end
 
         it "should destroy self" do
@@ -514,12 +515,12 @@ describe UsersController do
     describe "as an admin user" do
 
       before(:each) do
-        @admin = Factory(:user, :email => "admin@example.com", :admin => true)
+        @admin = FactoryGirl.create(:user, :email => "admin@example.com", :admin => true)
         test_sign_in(@admin)
       end
       after(:each) do
         User.destroy(@admin)
-        @user = Factory(:user)
+        @user = FactoryGirl.create(:user)
       end
 
       it "should destroy the user" do
