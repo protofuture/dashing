@@ -38,12 +38,12 @@ describe ItemsController do
 
     it "should have the right title" do
       get :show, :id => @item
-      response.body.should have_selector("title", :content => @item.private_path)
+      response.body.should have_selector("title", :text => @item.private_path)
     end
 
     it "should include the item's filename" do
       get :show, :id => @item
-      response.body.should have_selector("h1", :content => @item.private_path)
+      response.body.should have_selector("h1", :text => @item.private_path)
     end
   end
 
@@ -133,7 +133,7 @@ describe ItemsController do
     end
     it "should have the right title" do
       get :edit, :id => @item
-      response.body.should have_selector("title", :content => "Edit item")
+      response.body.should have_selector("title", :text => "Edit item")
     end
   end
 

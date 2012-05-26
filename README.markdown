@@ -1,3 +1,3 @@
-# Box
+# Dashing
 
-(c) 2010 Jonathan Paez. All rights reserved.
+(c) 2012 Jonathan Paez. All rights reserved.

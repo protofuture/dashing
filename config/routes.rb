@@ -1,4 +1,4 @@
-Box::Application.routes.draw do
+Dashing::Application.routes.draw do
   get "sessions/new"
 
   resources :users

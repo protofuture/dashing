@@ -42,13 +42,13 @@ describe "LayoutLinks" do
 
     describe "should have a signout link" do
       it { should have_selector("a", :href => signout_path,
-                                         :content => "Sign out")
+                                         :text => "Sign out")
       }
     end
 
     describe "should have a profile link" do
       it { should have_selector("a", :href => user_path(user),
-                                         :content => "Profile")
+                                         :text => "Profile")
       }
     end
   end
