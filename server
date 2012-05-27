@@ -11,4 +11,4 @@
 #Start the Nginx web server
 sudo /opt/nginx/sbin/nginx
 
-echo "Nginx web server is running..run ./stop_server to quit.\n"
+echo "Nginx web server is running..run ./stop_server to quit."

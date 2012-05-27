@@ -6,6 +6,7 @@ gem 'sqlite3', '1.3.6'
 gem 'will_paginate', '~> 3.0.3'
 gem 'json'
 gem 'jquery-rails'
+gem 'passenger'
 
 group :development do
   gem 'rspec-rails', '2.10.1'
