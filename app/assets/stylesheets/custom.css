@@ -38,6 +38,10 @@ section h1 {
   font-size: 200%;
 }
 
+h1.dashing {
+  color: grey;
+}
+
 /* Links */
 
 a {
