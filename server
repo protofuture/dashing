@@ -1,9 +1,14 @@
 #!/bin/bash
 
 #Start the thin app servers
-echo "Starting thin app servers."
-bundle exec thin start -e production -s 2
+#echo "Starting thin app servers."
+#bundle exec thin start -e production -s 2
 
 #Start the lighttpd web server
-echo "Starting lighttpd web server."
-sudo lighttpd -D -f lighttpd.conf
+#echo "Starting lighttpd web server."
+#sudo lighttpd -D -f lighttpd.conf
+
+#Start the Nginx web server
+sudo /opt/nginx/sbin/nginx
+
+echo "Nginx web server is running..run ./stop_server to quit.\n"
