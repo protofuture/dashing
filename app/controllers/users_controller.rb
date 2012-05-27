@@ -26,9 +26,14 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     if @user.save
       @user.toggle!(:admin) if User.first == @user #Make the first user an admin
-      sign_in @user unless signed_in?
-      flash[:success] = "A new account was successfuly created."
-      redirect_to @user
+      if signed_in?
+        flash[:success] = "A new account was successfuly created."
+        redirect_to @user
+      else
+        sign_in @user
+        flash[:success] = 'Your account has been created.'
+        redirect_to root_path
+      end
     else
       @title = "New User"
       render 'new'
@@ -50,13 +55,15 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    User.find(params[:id]).destroy
-    if current_user.admin?
-      flash[:success] = "User destroyed."
-      redirect_to users_path and return
-    else
+    @user = User.find(params[:id])
+    if current_user?(@user)
+      @user.destroy
       flash[:success] = "Your account has been successfuly deleted."
       redirect_to root_path
+    else
+      @user.destroy
+      flash[:success] = "User destroyed."
+      redirect_to users_path and return
     end
   end
 
