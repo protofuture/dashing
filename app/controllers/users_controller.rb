@@ -13,7 +13,7 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     @item = Item.new if signed_in?
-    @items = @user.items #.paginate(:page => params[:page])
+    @shared_items = @user.items.where(:shared=>true)#.paginate(:page => params[:page])
     @title = @user.name
   end
 

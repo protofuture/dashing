@@ -6,7 +6,7 @@
       </h1>
       <% unless @user.items.empty? %>
         <table class="items" summary="User items">
-          <%= render @items %>
+          <%= render @shared_items %>
         </table>
         <!--paginate items -->
       <% end %>
